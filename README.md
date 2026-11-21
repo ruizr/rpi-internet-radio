@@ -63,3 +63,65 @@ Reproductor autónomo de radio por internet construido sobre **Raspberry Pi 3 Mo
 |                                  |  (plughw:1,0)  |               |
 |                                  +----------------+               |
 +-------------------------------------------------------------------+
+
+---
+
+## 🖥️ Configuración e Historia Técnica de la Pantalla LCD 3.5"
+
+Para integrar la pantalla TFT SPI de 3.5" (`480x320`, controlador de video **ILI9486** y controlador táctil **XPT2046 / ADS7846**) sobre **Raspberry Pi OS Lite (Trixie)** sin entorno de escritorio completo, se aplicó la siguiente configuración a nivel de kernel y servidor gráfico Xorg:
+
+### 1. Habilitación de SPI y Device Tree Overlay (`/boot/firmware/config.txt`)
+Se descartó el overlay genérico `piscreen` con DRM y se utilizó el overlay específico `tft35a:rotate=270` junto con la resolución forzada a `480x320`:
+
+```ini
+[all]
+hdmi_force_hotplug=1
+dtparam=i2c_arm=on
+dtparam=spi=on
+enable_uart=1
+dtoverlay=tft35a:rotate=270
+hdmi_group=2
+hdmi_mode=1
+hdmi_mode=87
+hdmi_cvt 480 320 60 6 0 0 0
+hdmi_drive=2
+
+### 2. Mapeo del Framebuffer en Xorg (/etc/X11/xorg.conf.d/99-fbdev.conf)
+Dado que la salida HDMI corresponde a /dev/fb0 y el driver tft35a crea el dispositivo /dev/fb1, se configuró explícitamente el driver fbdev para dirigir la salida gráfica de X11 hacia la LCD:
+
+```ini
+Section "Device"
+    Identifier "LCD35"
+    Driver "fbdev"
+    Option "fbdev" "/dev/fb1"
+EndSection
+
+### 3. Diagnóstico del Panel Táctil (XPT2046 / ADS7846)
+Durante las pruebas de entrada con evtest, xinput y libinput, se comprobó que el controlador resistivo XPT2046 presentaba falla física (sin respuesta de eventos de toque). En lugar de descartar la pantalla, se redefinió la arquitectura:
+
+La LCD quedó dedicada 100% como visor de estado en modo kiosco (Chromium sin bordes a 480x320).
+
+Todo el control de emisoras y reproducción se trasladó al servidor web Flask (:8080), permitiendo operar la radio cómodamente desde cualquier teléfono móvil en la red local.
+
+---
+
+## 🚫 Bloqueo de Traducción Automática en Chromium Kiosko
+
+En una pantalla de `480x320` sin interacción táctil, el aviso emergente *"¿Quieres traducir esta página?"* de Chromium obstruye parte de la interfaz. Dado que las banderas clásicas (`--disable-features=TranslateUI`) son ignoradas en versiones recientes de Chromium, se aplicó un bloqueo en **tres capas simultáneas**:
+
+### 1. **Política Administrada a Nivel de Sistema (`/etc/chromium/policies/managed/no_translate.json`):**
+   Se fuerza la desactivación global del motor de traducción en Chromium:
+   ```json
+   {
+     "TranslateEnabled": false
+   }
+
+### 2. **Banderas de Arranque en ~/.xinitrc:**
+Se inicia Chromium con parámetros explícitos de idioma y supresión de traducción:
+   chromium --kiosk --lang=es-CL --disable-features=Translate,TranslateUI --noerrdialogs --disable-infobars http://localhost:8080
+
+### 3. **Atributos HTML en app.py:**
+La etiqueta raíz de la interfaz web declara explícitamente el idioma y el bloqueo de traducción para cualquier navegador cliente:
+   <html lang="es" translate="no" class="notranslate">
+
+
