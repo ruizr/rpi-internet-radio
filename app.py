@@ -119,7 +119,9 @@ HTML = r"""<!DOCTYPE html>
   #screensaver { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000000; color: #9ca3af; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
   #screensaver.active { display: flex; }
   #ss-clock { font-size: 72px; font-weight: bold; letter-spacing: 2px; font-variant-numeric: tabular-nums; line-height: 1; }
-  #ss-station { font-size: 18px; margin-top: 8px; color: #6b7280; max-width: 90vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #ss-date { font-size: 18px; color: #93c5fd; margin-top: 8px; text-transform: capitalize; }
+  #ss-weather { font-size: 16px; color: #e5e7eb; margin-top: 8px; }
+  #ss-station { font-size: 19px; color: #9ca3af; margin-top: 10px; max-width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 </style>
 </head>
 <body>
@@ -169,6 +171,8 @@ HTML = r"""<!DOCTYPE html>
 
   <div id="screensaver" onclick="wakeUp()">
     <div id="ss-clock">--:--</div>
+    <div id="ss-date">--</div>
+    <div id="ss-weather"></div>
     <div id="ss-station"></div>
   </div>
 
@@ -238,6 +242,7 @@ HTML = r"""<!DOCTYPE html>
       document.getElementById('w-today-range').innerText = w.today.range;
       document.getElementById('w-tom-desc').innerText = w.tomorrow.desc;
       document.getElementById('w-tom-range').innerText = w.tomorrow.range;
+      document.getElementById('ss-weather').innerText = `Actual ${w.today.temp} · Mañana ${w.tomorrow.range} (${w.tomorrow.desc})`;
     } catch (e) {}
   }
   async function wakeUp() {
