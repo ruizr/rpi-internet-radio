@@ -8,6 +8,7 @@ Reproductor autónomo de radio por internet construido sobre **Raspberry Pi 3 Mo
 
 ## ✨ Capturas de la interfaz
 
+| Modo Nocturno |
 | Pantalla LCD 3.5" en RPI | Control Web desde Celular |
 | :---: | :---: |
 | ![LCD Funcionando modo nocturno](assets/rpi-internet-radio_interfaz-desde-rpi_nocturno.jpg) | ![Interfaz Web](assets/rpi-internet-radio_interfaz-desde-celular_nocturno.jpg) |
