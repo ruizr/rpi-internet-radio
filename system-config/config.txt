@@ -51,7 +51,6 @@ dtparam=i2c_arm=on
 dtparam=spi=on
 enable_uart=1
 dtoverlay=tft35a:rotate=270
-#dtoverlay=piscreen,speed=18000000,rotate=90,drm
 hdmi_group=2
 hdmi_mode=1
 hdmi_mode=87
