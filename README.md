@@ -8,10 +8,12 @@ Reproductor autónomo de radio por internet y archivos de audio principales, con
 
 ## ✨ Capturas de la interfaz
 
-| Modo Nocturno |
 | Pantalla LCD 3.5" en RPI | Control Web desde Celular |
 | :---: | :---: |
-| ![LCD Funcionando modo nocturno](assets/rpi-internet-radio_interfaz-desde-rpi_nocturno.jpg) | ![Interfaz Web](assets/rpi-internet-radio_interfaz-desde-celular_nocturno.jpg) |
+| ![Pantalla LCD 3.5" en RPI](assets/rpi-internet-radio_interfaz-desde-rpi.jpeg) | ![Control Web desde Celular](assets/rpi-internet-radio_interfaz-desde-celular.jpeg) |
+| RPI Funcionando1 | RPI LCD Screensaver |
+| ![RPI Funcionando1](assets/rpi-internet-radio_interfaz-en_accion1.jpeg) | ![RPI LCD Screensaver](assets/rpi-internet-radio_interfaz-desde-rpi-screensaver.jpeg) |
+
 
 ---
 
