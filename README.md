@@ -12,7 +12,6 @@ Reproductor autónomo de radio por internet y archivos de audio principales, con
 | :---: | :---: |
 | ![Pantalla LCD 3.5" en RPI](assets/rpi-internet-radio_interfaz-desde-rpi.jpeg) | ![Control Web desde Celular](assets/rpi-internet-radio_interfaz-desde-celular.jpeg) |
 | RPI Funcionando1 | RPI LCD Screensaver |
-| :---: | :---: |
 | ![RPI Funcionando1](assets/rpi-internet-radio_interfaz-en_accion1.jpeg) | ![RPI LCD Screensaver](assets/rpi-internet-radio_interfaz-desde-rpi-screensaver.jpeg) |
 
 
