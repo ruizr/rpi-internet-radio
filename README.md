@@ -1,6 +1,6 @@
-# 📻 RPi Internet Radio & Weather Station
+# 📻 RPi Internet Radio & Reproductor MP3, M4A, FLAC & Weather Station
 
-Reproductor autónomo de radio por internet construido sobre **Raspberry Pi 3 Model B** con pantalla **LCD 3.5" (480x320)** en modo kiosco y control remoto desde cualquier navegador en la red local.
+Reproductor autónomo de radio por internet y archivos de audio principales, construido sobre **Raspberry Pi 3 Model B** con pantalla **LCD 3.5" (480x320)** en modo kiosco y control remoto desde cualquier navegador en la red local.
 
 > **Nota de Hardware:** La controladora táctil (`XPT2046`) de la pantalla LCD que tengo se encuentra dañada/inoperativa, por lo que la LCD actúa exclusivamente como visor de estado, reloj y clima, mientras que el control de emisoras y reproducción se realiza desde un teléfono celular o PC conectado a la red local (`http://<IP-RASPBERRY>:8080`), los cambios desde el celular se reflejan de inmediato en la raspberry.
 
@@ -18,11 +18,19 @@ Reproductor autónomo de radio por internet construido sobre **Raspberry Pi 3 Mo
 ## ✨ Características Principales
 
 * **Reproducción Autónoma al Encender:** Inicia automáticamente la emisora principal (`El Conquistador`) al arrancar el sistema mediante **MPD (Music Player Daemon)** sin requerir interacción física.
-* **Control Remoto vía Web Local:** Interfaz web responsiva accesible desde el navegador del celular en `http://<IP-RASPBERRY>:8080` para cambiar de emisora o pausar/reanudar, reflejando los cambios en la LCD en tiempo real (sincronización cada 2 segundos).
+* **Modo Dual (Radio Online + Reproductor Local):**
+  * **Radio en vivo:** Emisoras configurables vía streaming HTTP/HTTPS con estado dinámico (`ONLINE` / `EN PAUSA`).
+  * **Música local (`MP3`, `M4A`, `FLAC`):** Indexación automática de carpetas y subcarpetas en `~/radio-web/mp3` con controles de pista anterior, siguiente, reproducción aleatoria (`Aleat`), recarga de biblioteca y estado `REPRODUCIENDO`.
+* **Sincronización en Tiempo Real (LCD + Móvil/PC):** El estado de reproducción, modo activo, pista/emisora actual y protector de pantalla se sincronizan automáticamente entre la pantalla táctil de `480x320` y cualquier navegador en la red local.
 * **Reloj Digital Local:** Sincronizado con zona horaria `America/Santiago`.
 * **Pronóstico del Clima en Vivo:** Tarjetas laterales para **Hoy** (temperatura actual, estado y mínima/máxima) y **Mañana** (estado y mínima/máxima) mediante la API pública de **Open-Meteo** (sin necesidad de API Key) con caché local de 30 minutos.
-* **Modo Nocturno Automático:** Atenuación de brillo por software (`brightness: 0.25`) activa automáticamente entre las **23:00 y las 07:30**.
+* **Protector de Pantalla y Modo Noche:**
+  * Activación automática tras 5 minutos de inactividad mostrando reloj digital y emisora o canción activa; se despierta al cambiar la radio o el archivo mp3 (`/wake`).
+  * Atenuación automática nocturna entre las `23:00` y `07:30`.
 * **Modo Kiosco Limpio:** Bloqueo de suspensión de pantalla (`DPMS`), ocultamiento del puntero (`unclutter`) y supresión de burbujas de traducción mediante políticas administradas de Chromium.
+* **Protección contra Desgaste de MicroSD:**
+  * Búfer de audio en RAM (`16 MB`) y `state_file` en `/tmp` para evitar escrituras frecuentes.
+  * Logs de MPD redirigidos a `syslog` / `tmpfs` (`/var/log` y `/tmp` en RAM) y partición raíz montada con `noatime`.
 
 ---
 
