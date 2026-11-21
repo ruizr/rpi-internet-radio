@@ -167,7 +167,7 @@ HTML = r"""<!DOCTYPE html>
     <div class="track-list" id="track-list"></div>
   </div>
 
-  <div id="screensaver">
+  <div id="screensaver" onclick="wakeUp()">
     <div id="ss-clock">--:--</div>
     <div id="ss-station"></div>
   </div>
@@ -239,6 +239,11 @@ HTML = r"""<!DOCTYPE html>
       document.getElementById('w-tom-desc').innerText = w.tomorrow.desc;
       document.getElementById('w-tom-range').innerText = w.tomorrow.range;
     } catch (e) {}
+  }
+  async function wakeUp() {
+    document.getElementById('screensaver').classList.remove('active');
+    const res = await fetch('/wake', { method: 'POST' });
+    updateUI(await res.json());
   }
   function updateUI(data) {
     document.getElementById('state').innerText = data.playing ? 'EN VIVO' : 'EN PAUSA';
@@ -407,6 +412,12 @@ def toggle():
     global last_activity
     last_activity = time.time()
     subprocess.run(["mpc", "toggle"], check=False)
+    return jsonify(get_status())
+
+@app.route("/wake", methods=["POST"])
+def wake():
+    global last_activity
+    last_activity = time.time()
     return jsonify(get_status())
 
 def auto_play():
