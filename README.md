@@ -63,7 +63,7 @@ Reproductor autónomo de radio por internet construido sobre **Raspberry Pi 3 Mo
 |                                  |  (plughw:1,0)  |               |
 |                                  +----------------+               |
 +-------------------------------------------------------------------+
-```text
+```
 
 ---
 
@@ -86,6 +86,7 @@ hdmi_mode=1
 hdmi_mode=87
 hdmi_cvt 480 320 60 6 0 0 0
 hdmi_drive=2
+```
 
 ### 2. Mapeo del Framebuffer en Xorg (/etc/X11/xorg.conf.d/99-fbdev.conf)
 Dado que la salida HDMI corresponde a /dev/fb0 y el driver tft35a crea el dispositivo /dev/fb1, se configuró explícitamente el driver fbdev para dirigir la salida gráfica de X11 hacia la LCD:
@@ -96,6 +97,7 @@ Section "Device"
     Driver "fbdev"
     Option "fbdev" "/dev/fb1"
 EndSection
+```
 
 ### 3. Diagnóstico del Panel Táctil (XPT2046 / ADS7846)
 Durante las pruebas de entrada con evtest, xinput y libinput, se comprobó que el controlador resistivo XPT2046 presentaba falla física (sin respuesta de eventos de toque). En lugar de descartar la pantalla, se redefinió la arquitectura:
@@ -116,13 +118,18 @@ En una pantalla de `480x320` sin interacción táctil, el aviso emergente *"¿Qu
    {
      "TranslateEnabled": false
    }
+```
 
 ### 2. **Banderas de Arranque en ~/.xinitrc:**
 Se inicia Chromium con parámetros explícitos de idioma y supresión de traducción:
+   ```text
    chromium --kiosk --lang=es-CL --disable-features=Translate,TranslateUI --noerrdialogs --disable-infobars http://localhost:8080
+```
 
 ### 3. **Atributos HTML en app.py:**
 La etiqueta raíz de la interfaz web declara explícitamente el idioma y el bloqueo de traducción para cualquier navegador cliente:
+   ```html
    <html lang="es" translate="no" class="notranslate">
+```
 
 
