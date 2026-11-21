@@ -183,6 +183,17 @@ fi
 EOF
 ```
 
+### 4. Estabilidad de Red Wi-Fi (Desactivar Power Save)
+
+Para evitar microcortes en el streaming de audio o pérdida de acceso al control web por suspensión del adaptador WIFI (me ocurrió y obligado a "desenchufar-enchufar"), desactivé el ahorro de energía Wi-Fi en **NetworkManager**:
+
+```bash
+sudo tee /etc/NetworkManager/conf.d/wifi-powersave-off.conf > /dev/null << 'EOF'
+[connection]
+wifi.powersave = 2
+EOF
+sudo systemctl restart NetworkManager
+```
 ---
 
 ## 🚫 Bloqueo de Traducción Automática en Chromium Kiosko
@@ -208,6 +219,11 @@ La etiqueta raíz de la interfaz web declara explícitamente el idioma y el bloq
    ```html
    <html lang="es" translate="no" class="notranslate">
 ```
+
+
+
+
+
 
 ---
 
