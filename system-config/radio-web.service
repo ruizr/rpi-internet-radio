@@ -1,0 +1,13 @@
+[Unit]
+Description=Mini Web UI para Radio Internet
+After=network-online.target mpd.service
+Wants=network-online.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/radio-web
+ExecStart=/usr/bin/python3 /home/pi/radio-web/app.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

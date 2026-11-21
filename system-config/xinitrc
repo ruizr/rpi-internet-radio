@@ -1,0 +1,6 @@
+xset s off
+xset -dpms
+xset s noblank
+unclutter -idle 0.1 -root &
+rm -rf /tmp/kiosk-profile
+exec chromium --kiosk --noerrdialogs --disable-infobars --disable-session-crashed-bubble --disable-features=Translate,TranslateUI --lang=es --user-data-dir=/tmp/kiosk-profile --window-size=480,320 --window-position=0,0 http://localhost:8080
