@@ -105,7 +105,7 @@ HTML = r"""<!DOCTYPE html>
   .station.active { background: #065f46; border-color: #10b981; color: #ffffff; }
   .weather-col { width: 138px; display: flex; flex-direction: column; gap: 8px; }
   .w-card { flex: 1; background: #1f2937; border: 1px solid #374151; border-radius: 10px; padding: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-  .w-label { font-size: 11px; font-weight: bold; color: #93c5fd; text-transform: uppercase; margin-bottom: 2px; }
+  .w-label { font-size: 10px; font-weight: bold; color: #93c5fd; text-transform: uppercase; margin-bottom: 2px; }
   .w-temp { font-size: 18px; font-weight: bold; color: #f9fafb; line-height: 1.1; }
   .w-desc { font-size: 14px; font-weight: bold; color: #d1d5db; margin-top: 3px; line-height: 1.15; }
   .w-range { font-size: 18px; font-weight: bold; color: #fbbf24; margin-top: 4px; }
@@ -144,13 +144,13 @@ HTML = r"""<!DOCTYPE html>
     </div>
     <div class="weather-col">
       <div class="w-card">
-        <div class="w-label">Hoy</div>
+        <div class="w-label" id="w-today-label">Hoy</div>
         <div class="w-temp" id="w-today-temp">--°</div>
         <div class="w-desc" id="w-today-desc">Cargando...</div>
         <div class="w-range" id="w-today-range">-- / --</div>
       </div>
       <div class="w-card">
-        <div class="w-label">Mañana</div>
+        <div class="w-label" id="w-tom-label">Mañana</div>
         <div class="w-desc" id="w-tom-desc">Cargando...</div>
         <div class="w-range" id="w-tom-range">-- / --</div>
       </div>
@@ -279,8 +279,20 @@ HTML = r"""<!DOCTYPE html>
     document.getElementById('ss-clock').innerText = document.getElementById('clock').innerText;
     document.getElementById('ss-station').innerText = data.station || '';
   }
+
+  function formatShortDate(dateObj) {
+    const dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    return `${dias[dateObj.getDay()]} ${dateObj.getDate()} ${meses[dateObj.getMonth()]}`;
+  }
   function updateClock() {
     const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(now.getDate() + 1);
+
+    document.getElementById('w-today-label').innerText = 'Hoy - ' + formatShortDate(now);
+    document.getElementById('w-tom-label').innerText = 'Mañana - ' + formatShortDate(tomorrow);
+
     const timeStr = now.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
     document.getElementById('clock').innerText = timeStr;
     document.getElementById('ss-clock').innerText = timeStr;
