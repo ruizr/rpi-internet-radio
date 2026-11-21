@@ -132,4 +132,28 @@ La etiqueta raíz de la interfaz web declara explícitamente el idioma y el bloq
    <html lang="es" translate="no" class="notranslate">
 ```
 
+---
+
+## 🔧 Operación y Mantenimiento Rápido
+
+* **Reiniciar el servidor de radio:** `sudo systemctl restart radio-web.service`
+* **Recargar la pantalla LCD:** `sudo systemctl restart getty@tty1`
+* **Ver estado del servicio en vivo:** `sudo systemctl status radio-web.service`
+
+---
+
+## 📌 Estado del Proyecto
+
+Proyecto operativo y estable funcionando 24/7 como estación de radio y monitor ambiental local.
+
+---
+
+## 📄 Licencia y Uso
+
+Este proyecto es de uso libre para fines personales y educativos. Siéntete libre de adaptarlo a tu propia Raspberry Pi y agregar tus emisoras locales!!.
+
+---
+
+> Proyecto desarrollado y probado sobre **Raspberry Pi OS Lite (Trixie)** para uso doméstico autónomo 24/7.
+
 
