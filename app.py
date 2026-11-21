@@ -247,6 +247,11 @@ HTML = r"""<!DOCTYPE html>
   }
   function updateUI(data) {
     document.getElementById('state').innerText = data.playing ? 'EN VIVO' : 'EN PAUSA';
+    if (data.playing) {
+          document.getElementById('state').innerText = data.mode === 'music' ? 'REPRODUCIENDO' : 'ONLINE';
+        } else {
+          document.getElementById('state').innerText = 'EN PAUSA';
+    }
     document.getElementById('title').innerText = data.station || 'Sin reproducción';
     const btn = document.getElementById('toggleBtn');
     btn.innerText = data.playing ? 'PAUSE' : 'PLAY';
