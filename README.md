@@ -2,7 +2,7 @@
 
 Reproductor autónomo de radio por internet construido sobre **Raspberry Pi 3 Model B** con pantalla **LCD 3.5" (480x320)** en modo kiosco y control remoto desde cualquier navegador en la red local.
 
-> **Nota de Hardware:** La controladora táctil (`XPT2046`) de la pantalla LCD que tengo se encuentra dañada/inoperativa, por lo que la LCD actúa exclusivamente como visor de estado, reloj y clima, mientras que el control de emisoras y reproducción se realiza desde un teléfono celular o PC conectado a la red local (`http://<IP-RASPBERRY>:8080`).
+> **Nota de Hardware:** La controladora táctil (`XPT2046`) de la pantalla LCD que tengo se encuentra dañada/inoperativa, por lo que la LCD actúa exclusivamente como visor de estado, reloj y clima, mientras que el control de emisoras y reproducción se realiza desde un teléfono celular o PC conectado a la red local (`http://<IP-RASPBERRY>:8080`), los cambios desde el celular se reflejan de inmediato en la raspberry.
 
 ---
 
