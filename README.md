@@ -108,6 +108,49 @@ Todo el control de emisoras y reproducción se trasladó al servidor web Flask (
 
 ---
 
+## ⚙️ Instalación de Paquetes, X11 e Interfaz Kiosco
+
+A partir de una instalación limpia de **Raspberry Pi OS Lite (Trixie)** sin entorno de escritorio, se instalaron únicamente los componentes esenciales para el motor de audio (`MPD`), el servidor web (`Flask`), un servidor gráfico mínimo (`Xorg`) y `Chromium` en modo kiosco a pantalla completa.
+
+### 1. Instalación de Paquetes del Sistema (`apt`)
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y mpd mpc python3-flask chromium xserver-xorg xinit x11-xserver-utils unclutter fonts-noto-color-emoji
+```
+### 2. Configuración del Audio y Servicio Web
+```bash
+sudo tee -a /etc/mpd.conf > /dev/null << 'EOF'
+audio_output {
+    type            "alsa"
+    name            "Jack 3.5mm Raspberry Pi"
+    device          "plughw:1,0"
+    mixer_type      "software"
+}
+EOF
+
+sudo systemctl restart mpd
+mpc volume 100
+sudo timedatectl set-timezone America/Santiago
+sudo cp system-config/radio-web.service /etc/systemd/system/radio-web.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now radio-web.service
+```
+### 3. Configuración de X11 y Modo Kiosco
+```bash
+sudo mkdir -p /etc/X11/xorg.conf.d
+sudo cp system-config/99-fbdev.conf /etc/X11/xorg.conf.d/99-fbdev.conf
+sudo mkdir -p /etc/chromium/policies/managed
+sudo cp system-config/no_translate.json /etc/chromium/policies/managed/no_translate.json
+cp system-config/xinitrc ~/.xinitrc
+cat << 'EOF' >> ~/.bash_profile
+if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+  startx
+fi
+EOF
+```
+
+---
+
 ## 🚫 Bloqueo de Traducción Automática en Chromium Kiosko
 
 En una pantalla de `480x320` sin interacción táctil, el aviso emergente *"¿Quieres traducir esta página?"* de Chromium obstruye parte de la interfaz. Dado que las banderas clásicas (`--disable-features=TranslateUI`) son ignoradas en versiones recientes de Chromium, se aplicó un bloqueo en **tres capas simultáneas**:
@@ -137,7 +180,7 @@ La etiqueta raíz de la interfaz web declara explícitamente el idioma y el bloq
 ## 🔧 Operación y Mantenimiento Rápido
 
 * **Reiniciar el servidor de radio:** `sudo systemctl restart radio-web.service`
-* **Recargar la pantalla LCD:** `sudo systemctl restart getty@tty1`
+* **Recargar la pantalla LCD (interrumpe brevemente la señal):** `sudo systemctl restart getty@tty1`
 * **Ver estado del servicio en vivo:** `sudo systemctl status radio-web.service`
 
 ---
