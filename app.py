@@ -14,7 +14,7 @@ STATIONS = [
     {"name": "Radio Bio-Bio", "url": "https://unlimited4-us.dps.live/biobiosantiago/mp3/icecast.audio"},
     {"name": "Radio Concierto", "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/CONCIERTO.mp3"},
     {"name": "Radio Futuro", "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/FUTURO.mp3"},
-	{"name": "El Conquistador", "url": "https://stream10.usastreams.com/9314/stream"},
+    {"name": "Radio FM tiempo", "url": "https://mdstrm.com/audio/639b7943e0a27908a55dbf9e/icecast.audio"},
 ]
 
 WMO_ICONS = {
@@ -89,6 +89,11 @@ HTML = """<!DOCTYPE html>
   .w-temp { font-size: 18px; font-weight: bold; color: #f9fafb; line-height: 1.1; }
   .w-desc { font-size: 14px; font-weight: bold; color: #d1d5db; margin-top: 3px; line-height: 1.15; }
   .w-range { font-size: 18px; font-weight: bold; color: #fbbf24; margin-top: 4px; }
+  #screensaver { display: none; position: fixed; inset: 0; background: #000000; color: #4b5563; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
+  #screensaver.active { display: flex; }
+  #ss-clock { font-size: 64px; font-weight: bold; letter-spacing: 2px; font-variant-numeric: tabular-nums; }
+  #ss-station { font-size: 16px; margin-top: 6px; color: #374151; }
+
 </style>
 </head>
 <body>
@@ -119,6 +124,10 @@ HTML = """<!DOCTYPE html>
         <div class="w-range" id="w-tom-range">-- / --</div>
       </div>
     </div>
+  </div>
+  <div id="screensaver">
+      <div id="ss-clock">--:--</div>
+      <div id="ss-station"></div>
   </div>
 <script>
   async function playStation(idx) {
@@ -153,6 +162,10 @@ HTML = """<!DOCTYPE html>
     btn.innerText = data.playing ? 'PAUSE' : 'PLAY';
     btn.classList.toggle('paused', !data.playing);
     document.querySelectorAll('.station').forEach((el, i) => el.classList.toggle('active', i === data.index));
+    const ss = document.getElementById('screensaver');
+    ss.classList.toggle('active', !!data.screensaver);
+    document.getElementById('ss-clock').innerText = document.getElementById('clock').innerText;
+    document.getElementById('ss-station').innerText = data.station || '';
   }
   function updateClock() {
     const now = new Date();
@@ -172,6 +185,8 @@ HTML = """<!DOCTYPE html>
 </html>"""
 
 current_index = 0
+last_activity = time.time()
+SCREENSAVER_TIMEOUT = 300  # 5 minutos (300 segundos)
 
 def get_status():
     try:
@@ -185,7 +200,8 @@ def get_status():
             idx = i
             break
     station = STATIONS[idx]["name"] if 0 <= idx < len(STATIONS) else ""
-    return {"playing": playing, "station": station, "index": idx}
+    is_screensaver = (time.time() - last_activity) > SCREENSAVER_TIMEOUT
+    return {"playing": playing, "station": station, "index": idx, "screensaver": is_screensaver}
 
 @app.route("/")
 def index():
@@ -201,7 +217,8 @@ def weather():
 
 @app.route("/play/<int:idx>", methods=["POST"])
 def play(idx):
-    global current_index
+    global current_index, last_activity
+    last_activity = time.time()
     if 0 <= idx < len(STATIONS):
         current_index = idx
         subprocess.run(["mpc", "clear"], check=False)
@@ -211,6 +228,8 @@ def play(idx):
 
 @app.route("/toggle", methods=["POST"])
 def toggle():
+    global last_activity
+    last_activity = time.time()
     subprocess.run(["mpc", "toggle"], check=False)
     return jsonify(get_status())
 
