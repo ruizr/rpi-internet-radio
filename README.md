@@ -63,6 +63,7 @@ Reproductor autónomo de radio por internet construido sobre **Raspberry Pi 3 Mo
 |                                  |  (plughw:1,0)  |               |
 |                                  +----------------+               |
 +-------------------------------------------------------------------+
+```text
 
 ---
 
